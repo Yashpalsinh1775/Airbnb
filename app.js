@@ -50,9 +50,7 @@ const sessionOptions = {
     },
 };
 
-// app.get("/", (req, res) => {
-//     res.send("Wecome To My First WebSite");
-// });
+
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -71,16 +69,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.get("/demouser", async (req, res) => {
-//     let fakeUser = new User ({
-//         email: "student@gamil.com",
-//         username: "delta-student"
-//     });
-
-//     let registeredUser = await User.register( fakeUser, "helloWord");
-//     res.send(registeredUser);
-// });
-
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
@@ -92,7 +80,6 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
     let { statusCode=500, message="Somethings Went Wrong!" } = err;
     res.status(statusCode).render("error.ejs", { message });
-    // res.status(statusCode).send(message);
 });
 
 app.listen(8080, () => {
