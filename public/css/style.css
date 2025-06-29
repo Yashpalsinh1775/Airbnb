@@ -60,7 +60,14 @@ body {
     border-radius: 1rem !important;
     width: 100% !important;
     object-fit: cover;
+    transition: transform 0.2s ease;
 }
+
+
+.listing-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
 
 .card-body {
     padding: 0 !important;
@@ -108,4 +115,18 @@ body {
 .show-card {
     padding-left: 0;
     padding-right: 0;
+}
+
+body {
+    background-color: #f9f9f9;
+}
+
+@media (max-width: 768px) {
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    .listing-card {
+        margin-bottom: 1rem;
+    }
 }
