@@ -5,7 +5,6 @@ if(process.env.NODE_ENV != "production") {
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const MongoStore = require("connect-mongo");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -20,22 +19,18 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-const MONGO_URL = process.env.MONGO_URL;
-await mongoose.connect(MONGO_URL);
+const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
 .then(() => {
-    console.log("Connected to MongoDB");
-})
-.catch((err) => {
-    console.log("MongoDB Connection Error:", err.message);
+    console.log("connected to DB");
+}).catch((err) => {
+    console.log(err);
 });
-
 
 async function main() {
     await mongoose.connect(MONGO_URL);
 }
-
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -45,13 +40,6 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join (__dirname, "/public")));
 
 const sessionOptions = {
-    store: MongoStore.create({
-        mongoUrl: MONGO_URL,
-        crypto: {
-            secret: "mysupersecretcode"
-        },
-        touchAfter: 24 * 3600  // reduce update frequency (optional)
-    }),
     secret: "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
@@ -59,8 +47,10 @@ const sessionOptions = {
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true
-    }
+    },
 };
+
+
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -91,4 +81,3 @@ app.use((err, req, res, next) => {
     let { statusCode=500, message="Somethings Went Wrong!" } = err;
     res.status(statusCode).render("error.ejs", { message });
 });
-module.exports = app;
