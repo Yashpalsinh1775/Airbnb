@@ -81,7 +81,4 @@ app.use((err, req, res, next) => {
     let { statusCode=500, message="Somethings Went Wrong!" } = err;
     res.status(statusCode).render("error.ejs", { message });
 });
-
-app.listen(8080, () => {
-    console.log("server is listing to port 8080"); 
-});
+module.exports = app;
