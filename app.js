@@ -5,6 +5,7 @@ if(process.env.NODE_ENV != "production") {
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -45,6 +46,13 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join (__dirname, "/public")));
 
 const sessionOptions = {
+    store: MongoStore.create({
+        mongoUrl: MONGO_URL,
+        crypto: {
+            secret: "mysupersecretcode"
+        },
+        touchAfter: 24 * 3600  // reduce update frequency (optional)
+    }),
     secret: "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
@@ -52,8 +60,9 @@ const sessionOptions = {
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true
-    },
+    }
 };
+
 
 
 
