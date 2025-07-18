@@ -21,21 +21,20 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 const MONGO_URL = process.env.MONGO_URL;
+await mongoose.connect(MONGO_URL);
 
 main()
 .then(() => {
-    console.log(" Connected to MongoDB");
-}).catch((err) => {
+    console.log("Connected to MongoDB");
+})
+.catch((err) => {
     console.log("MongoDB Connection Error:", err.message);
 });
 
-async function main() {
-    await mongoose.connect(MONGO_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-}
 
+async function main() {
+    await mongoose.connect(MONGO_URL);
+}
 
 
 app.set("view engine", "ejs");
@@ -62,9 +61,6 @@ const sessionOptions = {
         httpOnly: true
     }
 };
-
-
-
 
 app.use(session(sessionOptions));
 app.use(flash());
