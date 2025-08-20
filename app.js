@@ -1,4 +1,3 @@
-// Load environment variables if not in production
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
@@ -11,9 +10,10 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
-const LocalStrategy = require("passport-local"); // ✅ fixed typo (was: LocalSrategy)
+const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
 // Routes
@@ -22,7 +22,6 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 // MongoDB Connection
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 const dbUrl = process.env.ATLASTDB_URL;
 
 main()
@@ -41,15 +40,29 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
+// Session Store (MongoDB)
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    secret: process.env.SESSION_SECRET || "thisshouldbeabettersecret",
+    touchAfter: 24 * 3600 // update only once in 24h unless data changes
+});
+
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e);
+});
+
 // Session Configuration
 const sessionOptions = {
-    secret: "mysupersecretcode",
+    store,
+    name: "session", // custom cookie name
+    secret: process.env.SESSION_SECRET || "thisshouldbeabettersecret",
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 1 week
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" // only use HTTPS cookies in production
     }
 };
 app.use(session(sessionOptions));
@@ -87,7 +100,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
