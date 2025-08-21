@@ -15,13 +15,6 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
-const cors = require("cors");
-
-// ✅ CORS (agar frontend alag host hai to origin update karo)
-app.use(cors({
-    origin: process.env.FRONTEND_URL || "https://airbnb-segu.onrender.com",
-    credentials: true
-}));
 
 // Routes
 const listingRouter = require("./routes/listing.js");
@@ -58,18 +51,17 @@ store.on("error", function (e) {
     console.log("SESSION STORE ERROR", e);
 });
 
-// ✅ Session Configuration
 const sessionOptions = {
     store,
-    name: "session", // custom cookie name
+    name: "session",
     secret: process.env.SESSION_SECRET || "thisshouldbeabettersecret",
     resave: false,
-    saveUninitialized: false,   // unnecessary session avoid
+    saveUninitialized: false,
     cookie: {
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 1 week
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",  // true only on HTTPS
+        secure: process.env.NODE_ENV === "production", // HTTPS ke liye
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
     }
 };
