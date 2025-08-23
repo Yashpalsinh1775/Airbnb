@@ -61,3 +61,11 @@ module.exports.isReviewAuthor = async (req, res, next) => {
 
     next();    
 };
+
+module.exports.isLoggedIn = (req, res, next) => {
+  if (req.session && req.session.user) {
+    return next();
+  } else {
+    res.render("users/error", { message: "Please log in" });
+  }
+};
