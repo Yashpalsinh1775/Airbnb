@@ -65,6 +65,7 @@ const sessionOptions = {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
     }
 };
+app.set("trust proxy", 1);
 app.use(session(sessionOptions));
 app.use(flash());
 
