@@ -24,13 +24,4 @@ router.route("/:id")
 //Edit Route
 router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
 
-app.get("/dashboard", isLoggedIn, (req, res) => {
-  res.render("dashboard");
-});
-
-app.get("/listing/new", isLoggedIn, (req, res) => {
-  res.render("listing/new");
-});
-
-
 module.exports = router;
