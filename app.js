@@ -91,14 +91,8 @@ app.use("/", userRouter);
 
 // 404 Handler
 app.all("*", (req, res, next) => {
-    next(new ExpressError(404, "Page Not Found!"));
+    next(new ExpressError(404, "😞Oops! Page Not Found. 👉Please log in first!"));
 });
-
-// Agar koi bhi route match nahi hua to ye chalega
-app.use((req, res) => {
-    res.status(404).render("users/error", { message: "😞Oops! Page Not Found. 👉Please log in first." });
-});
-
 
 // Error Handler
 app.use((err, req, res, next) => {
