@@ -94,6 +94,12 @@ app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
 });
 
+// Agar koi bhi route match nahi hua to ye chalega
+app.use((req, res) => {
+    res.status(404).render("users/error", { message: "😞Oops! Page Not Found. 👉Please log in first." });
+});
+
+
 // Error Handler
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = "Something went wrong!" } = err;
