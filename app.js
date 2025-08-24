@@ -85,9 +85,9 @@ app.use((req, res, next) => {
 });
 
 // Routers
-app.use("/listings", listingRouter);
+app.use("https://airbnb-segu.onrender.com/", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("/airbnb-segu.onrender.com", userRouter);
+app.use("/", userRouter);
 
 // 404 Handler
 app.all("*", (req, res, next) => {
