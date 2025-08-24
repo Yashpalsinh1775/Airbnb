@@ -85,7 +85,7 @@ app.use((req, res, next) => {
 });
 
 // Routers
-app.use("https://airbnb-segu.onrender.com/", listingRouter);
+app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
