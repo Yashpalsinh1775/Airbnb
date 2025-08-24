@@ -87,7 +87,7 @@ app.use((req, res, next) => {
 // Routers
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("/", userRouter);
+app.use("/airbnb-segu.onrender.com", userRouter);
 
 // 404 Handler
 app.all("*", (req, res, next) => {
